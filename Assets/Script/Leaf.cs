@@ -1,5 +1,15 @@
-﻿public class Leaf : Node {
+﻿using UnityEngine;
+
+public class Leaf : Node {
+    
+    //Leaf can't split
     public override void Split() {
-        throw new System.NotImplementedException();
+        Display();
+    }
+    
+
+    public void Display() {
+        Debug.Log("Create square");
+        GameObject square = GameObject.CreatePrimitive(PrimitiveType.Cube);
     }
 }
