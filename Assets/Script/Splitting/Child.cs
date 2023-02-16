@@ -15,14 +15,13 @@ public class Child : Node
         Node B;
         if (!SplitOnAbsissa) {
             if(ordinate.x + MinimumSize > ordinate.y - MinimumSize) return;
-            //SplitValue = Random.Range(ordinate.x + MinimumSize, ordinate.y - MinimumSize);
             SplitValue = _randomValue.Next(ordinate.x + MinimumSize, ordinate.y - MinimumSize);
-            if (SplitValue - ordinate.x > MinimumSize) A = new Child(this);
+            if (SplitValue - ordinate.x > MinimumSize + 1) A = new Child(this);
             else {
                 A = new Leaf();
                 Rooms.Add(A);
             }
-            if (ordinate.y - SplitValue > MinimumSize) B = new Child(this);
+            if (ordinate.y - SplitValue > MinimumSize + 1) B = new Child(this);
             else {
                 B = new Leaf();
                 Rooms.Add(B);
@@ -34,14 +33,13 @@ public class Child : Node
         }
         else {
             if(abscissa.x + MinimumSize > abscissa.y - MinimumSize) return;
-            //SplitValue = Random.Range(abscissa.x + MinimumSize, abscissa.y - MinimumSize);
             SplitValue = _randomValue.Next(abscissa.x + MinimumSize, abscissa.y - MinimumSize);
-            if (SplitValue - abscissa.x > MinimumSize) A = new Child(this);
+            if (SplitValue - abscissa.x > MinimumSize + 1) A = new Child(this);
             else {
                 A = new Leaf();
                 Rooms.Add(A);
             }
-            if (abscissa.y - SplitValue > MinimumSize) B = new Child(this);
+            if (abscissa.y - SplitValue > MinimumSize + 1) B = new Child(this);
             else {
                 B = new Leaf();
                 Rooms.Add(B);
