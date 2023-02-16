@@ -19,12 +19,12 @@ public class Child : Node
             if (SplitValue - ordinate.x > MinimumSize + 1) A = new Child(this);
             else {
                 A = new Leaf();
-                Rooms.Add(A);
+                Leafs.Add(A);
             }
             if (ordinate.y - SplitValue > MinimumSize + 1) B = new Child(this);
             else {
                 B = new Leaf();
-                Rooms.Add(B);
+                Leafs.Add(B);
             }
             A.Square[0] = abscissa;
             A.Square[1] = new Vector2Int(ordinate.x, SplitValue);
@@ -37,12 +37,12 @@ public class Child : Node
             if (SplitValue - abscissa.x > MinimumSize + 1) A = new Child(this);
             else {
                 A = new Leaf();
-                Rooms.Add(A);
+                Leafs.Add(A);
             }
             if (abscissa.y - SplitValue > MinimumSize + 1) B = new Child(this);
             else {
                 B = new Leaf();
-                Rooms.Add(B);
+                Leafs.Add(B);
             }
             A.Square[0] = new Vector2Int(abscissa.x, SplitValue);
             A.Square[1] = ordinate;
@@ -50,10 +50,8 @@ public class Child : Node
             B.Square[1] = ordinate;
         }
         Children = new[] { A, B };
-        Debug.Log(abscissa  + " " + ordinate + " has been split to " + SplitValue);
         foreach (Node child in Children) {
             if (child.GetType() == typeof(Leaf)) {
-                Debug.Log(child.abscissa + " " + child.ordinate + " is a LEAF");
                 continue;
             }
             child.SplitOnAbsissa = !SplitOnAbsissa;

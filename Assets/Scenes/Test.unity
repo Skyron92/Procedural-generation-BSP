@@ -529,7 +529,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2093747697}
         m_TargetAssemblyTypeName: DataManager, Assembly-CSharp
-        m_MethodName: Test
+        m_MethodName: GenerateMap
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -770,7 +770,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MapLength: {x: 0, y: 20}
   MapHeight: {x: 0, y: 20}
-  SquareTheMap: 0
+  SquareTheMap: 1
   _squarePrefab: {fileID: 2006158449868721317, guid: a02745128559b77429f35380e1323a8a, type: 3}
 --- !u!4 &2093747698
 Transform:

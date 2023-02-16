@@ -19,8 +19,6 @@ public class Origin : Node {
         B.Square[0] = new Vector2Int(SplitValue, abscissa.y);
         B.Square[1] = ordinate;
         Children = new []{ A, B };
-        Debug.Log("Origin's coordinate are " + abscissa + " for X and " + ordinate + " for Y.");
-        Debug.Log("Origin has been split to " + SplitValue);
         foreach (Node child in Children) {
             child.Split();
         }

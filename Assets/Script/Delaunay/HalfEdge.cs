@@ -1,14 +1,15 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class HalfEdge {
     
-    public Vector2[] Vertices = new Vector2[2];
+    public Vector2Int[] Vertices = new Vector2Int[2];
     public Vector2 Edge => new Vector2(Vertices[1].x - Vertices[0].x, Vertices[1].y - Vertices[0].y);
-    public Vector2 Middle => new Vector2(Edge.x / 2, Edge.y / 2);
-    public Triangle Triangle;
+    public Vector2 OppositeEdge => new Vector2(Vertices[0].x - Vertices[1].x, Vertices[0].y - Vertices[1].y);
+    public List<Triangle> Triangles = new List<Triangle>();
 
-    public HalfEdge(Triangle triangle, Vector2 VertexOrigin, Vector2 VertexDestination) {
-        Triangle = triangle;
+    public HalfEdge(Triangle triangle, Vector2Int VertexOrigin, Vector2Int VertexDestination) {
+        Triangles.Add(triangle);
         Vertices[0] = VertexOrigin;
         Vertices[1] = VertexDestination;
     }

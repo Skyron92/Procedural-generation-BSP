@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DataManager : MonoBehaviour {
@@ -6,6 +7,10 @@ public class DataManager : MonoBehaviour {
     [Tooltip("X coordinates.")] [SerializeField] private Vector2Int MapLength;
     [Tooltip("Y coordinates.")] [SerializeField] private Vector2Int MapHeight;
 
+    public static Vector2Int Lenght;
+    public static Vector2Int Height;
+    public static Vector2Int Base;
+
     [Tooltip(
         "True will make map in a square. False will constraint room's coordinate as int and will shift room out of the initial square.")]
     [SerializeField]
@@ -13,13 +18,31 @@ public class DataManager : MonoBehaviour {
 
     [Header("SPRITE")] [SerializeField] private GameObject _squarePrefab;
 
-    public void Test() {
+    public static List<Triangle> Triangles = new List<Triangle>();
+
+    //Split and selection
+    public void GenerateMap()
+    {
+        Lenght = -MapLength;
+        Height = MapHeight * 2;
+        Base = new Vector2Int(MapLength.y, MapHeight.x);
         Origin origin = new Origin(MapLength, MapHeight);
         origin.Split();
-
-        foreach (Node leaf in Node.Rooms) {
+        foreach (Node leaf in Node.Leafs) {
+            leaf.Split();
             DisplayRooms(leaf);
         }
+        DelaunayTriangulation();
+    }
+
+    public void DelaunayTriangulation() {
+        
+        foreach (Triangle triangle in Triangles) {
+            Delaunay.PointList.Add(triangle.A);
+            Delaunay.PointList.Add(triangle.B);
+            Delaunay.PointList.Add(triangle.C);
+        }
+        Delaunay.BowyerWatson(Delaunay.PointList);
     }
 
     public void DisplayRooms(Node room) {
