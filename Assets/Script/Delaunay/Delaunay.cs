@@ -1,16 +1,14 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
+using System.Linq;
 using UnityEngine;
 
-public static class Delaunay
-{
+public static class Delaunay {
 
     public static List<Vector2Int> PointList = new List<Vector2Int>();
     public static List<Triangle> Triangulation = new List<Triangle>();
 
-    public static void BowyerWatson(List<Vector2Int> pointList)
-    {
-        // pointList is a set of coordinates defining the points to be triangulated
+    // Link to the algorithm : https://en.wikipedia.org/wiki/Bowyer%E2%80%93Watson_algorithm
+    public static void BowyerWatson(List<Vector2Int> pointList) {
         Triangulation.Clear();
         Triangle SuperTriangle = new Triangle(DataManager.Lenght, DataManager.Base, DataManager.Height);
         Triangulation.Add(SuperTriangle);
@@ -36,21 +34,17 @@ public static class Delaunay
                 }
             }
 
-            foreach (Triangle triangles in badTriangles)
-            {
+            foreach (Triangle triangles in badTriangles) {
                 Triangulation.Remove(triangles);
             }
 
-            foreach (HalfEdge halfEdge in polygon)
-            {
+            foreach (HalfEdge halfEdge in polygon) {
                 Triangle newTri = new Triangle(halfEdge.Vertices[0], halfEdge.Vertices[1], point);
                 Triangulation.Add(newTri);
             }
-
-            foreach (Triangle triangles in Triangulation)
-            {
-                foreach (Vector2Int vertex in triangles.vertices)
-                {
+            
+            foreach (Triangle triangles in Triangulation.ToList()) {
+                foreach (Vector2Int vertex in triangles.vertices) {
                     if (vertex == SuperTriangle.A || vertex == SuperTriangle.B || vertex == SuperTriangle.C)
                         Triangulation.Remove(triangles);
                 }
