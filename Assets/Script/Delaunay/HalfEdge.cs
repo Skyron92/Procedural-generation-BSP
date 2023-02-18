@@ -4,13 +4,16 @@ using UnityEngine;
 public class HalfEdge {
     
     public Vector2Int[] Vertices = new Vector2Int[2];
-    public Vector2 Edge => new Vector2(Vertices[1].x - Vertices[0].x, Vertices[1].y - Vertices[0].y);
-    public Vector2 OppositeEdge => new Vector2(Vertices[0].x - Vertices[1].x, Vertices[0].y - Vertices[1].y);
+    public Vector2Int Edge => new Vector2Int(B.X - A.X, B.Y - A.Y);
+    public Vector2Int OppositeEdge => new Vector2Int(A.X - B.X, A.Y - B.Y);
     public List<Triangle> Triangles = new List<Triangle>();
+    public int Weight => Mathf.FloorToInt(Mathf.Sqrt(Triangle.Square(Edge.x) + Triangle.Square(Edge.y)));
+    public Point A;
+    public Point B;
 
-    public HalfEdge(Triangle triangle, Vector2Int VertexOrigin, Vector2Int VertexDestination) {
+    public HalfEdge(Triangle triangle, Point VertexOrigin, Point VertexDestination) {
         Triangles.Add(triangle);
-        Vertices[0] = VertexOrigin;
-        Vertices[1] = VertexDestination;
+        A = VertexOrigin;
+        B = VertexDestination;
     }
 }

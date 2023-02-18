@@ -38,11 +38,12 @@ public class DataManager : MonoBehaviour {
     public void DelaunayTriangulation() {
         
         foreach (Triangle triangle in Triangles) {
-            Delaunay.PointList.Add(triangle.A);
-            Delaunay.PointList.Add(triangle.B);
-            Delaunay.PointList.Add(triangle.C);
+            if(!Delaunay.PointList.Contains(triangle.A)) Delaunay.PointList.Add(triangle.A);
+            if(!Delaunay.PointList.Contains(triangle.B)) Delaunay.PointList.Add(triangle.B);
+            if(!Delaunay.PointList.Contains(triangle.C)) Delaunay.PointList.Add(triangle.C);
         }
         Delaunay.BowyerWatson(Delaunay.PointList);
+        Delaunay.Kruskal(Delaunay.PointList);
     }
 
     public void DisplayRooms(Node room) {

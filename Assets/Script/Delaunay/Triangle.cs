@@ -2,19 +2,24 @@
 
 public class Triangle
 {
-    public Triangle(Vector2Int a, Vector2Int b, Vector2Int c)
+    public Triangle(Point a, Point b, Point c)
     {
-        vertices[0] = a;
-        vertices[1] = b;
-        vertices[2] = c;
+        Vertices[0] = a;
+        Vertices[1] = b;
+        Vertices[2] = c;
     }
-    public Vector2Int[] vertices = new Vector2Int[3];
+    
+    public Point A => Vertices[0];
+    public Point B => Vertices[1];
+    public Point C => Vertices[2];
 
-    public Vector2Int A => vertices[0];
-    public Vector2Int B => vertices[1];
-    public Vector2Int C => vertices[2];
+    public Point[] Vertices = new Point[3];
+    
     // Order of HalfEdges is always A -> B -> C
     public HalfEdge[] HalfEdges = new HalfEdge[3];
+    public HalfEdge AB => HalfEdges[0];
+    public HalfEdge BC => HalfEdges[1];
+    public HalfEdge CA => HalfEdges[2];
     public Vector2Int Center;
     public Circle Circle;
 
@@ -29,14 +34,14 @@ public class Triangle
 
     public void Circumcenter() {
         // Formula source : https://en.wikipedia.org/wiki/Circumscribed_circle#Circumcenter_coordinates
-        int D = 2 * (A.x * (B.y - C.y) + B.x * (C.y - A.y) + C.x * (A.y - B.y));
-        Center.x = ((Square(A.x) + Square(A.y)) * (B.y - C.y) + (Square(B.x) + Square(B.y)) * (C.y - A.y) + (Square(C.x) + Square(C.y)) * (A.y - B.y)) / D;
-        Center.y = ((Square(A.x) + Square(A.y)) * (C.x - B.x) + (Square(B.x) + Square(B.y)) * (A.x - C.x) + (Square(C.x) + Square(C.y)) * (B.x - A.x)) / D;
+        int D = 2 * (A.X * (B.Y - C.Y) + B.X * (C.Y - A.Y) + C.X * (A.Y - B.Y));
+        Center.x = ((Square(A.X) + Square(A.Y)) * (B.Y - C.Y) + (Square(B.X) + Square(B.Y)) * (C.Y - A.Y) + (Square(C.X) + Square(C.Y)) * (A.Y - B.Y)) / D;
+        Center.y = ((Square(A.X) + Square(A.Y)) * (C.X - B.X) + (Square(B.X) + Square(B.Y)) * (A.X - C.X) + (Square(C.X) + Square(C.Y)) * (B.X - A.X)) / D;
 
-        Circle = new Circle(Center, Vector2Int.Distance(Center, A));
+        Circle = new Circle(Center, Vector2Int.Distance(Center, A.Coordinates));
     }
 
-    public int Square(int x) {
+    public static int Square(int x) {
         return x * x;
     }
     

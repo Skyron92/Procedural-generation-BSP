@@ -13,8 +13,8 @@ public class Leaf : Node
     Leaf's splitting correspond to create the two triangles compounding itself.*/
     public override void Split()
     {
-        Triangle ABC = new Triangle(new Vector2Int(abscissa.x, ordinate.y), new Vector2Int(abscissa.x, ordinate.x), new Vector2Int(abscissa.y, ordinate.y));
-        Triangle BDC = new Triangle(new Vector2Int(abscissa.x, ordinate.x),new Vector2Int(abscissa.y, ordinate.x),new Vector2Int(abscissa.y, ordinate.y));
+        Triangle ABC = new Triangle(new Point(new Vector2Int(abscissa.x, ordinate.y)), new Point(new Vector2Int(abscissa.x, ordinate.x)), new Point(new Vector2Int(abscissa.y, ordinate.y)));
+        Triangle BDC = new Triangle(new Point(new Vector2Int(abscissa.x, ordinate.x)), new Point(new Vector2Int(abscissa.y, ordinate.x)), new Point(new Vector2Int(abscissa.y, ordinate.y)));
 
         DataManager.Triangles.Add(ABC);
         DataManager.Triangles.Add(BDC);
