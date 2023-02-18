@@ -111,6 +111,7 @@ public static class Delaunay
     }
 
     private static Point Find(Point v) {
+        if (v.parent == null) v.parent = v;
         if (v.parent != v) {
             v.parent = Find(v.parent);
         }
@@ -124,6 +125,7 @@ public static class Delaunay
     }
 
     private static void ClassifyByGrowingOrder(List<HalfEdge> list) {
-        list = new List<HalfEdge>(list.OrderBy(edge => edge.Weight));
+        list.OrderByDescending(edge => edge.Weight). ToList();
+        list.Reverse();
     }
 }
