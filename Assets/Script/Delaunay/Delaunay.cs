@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public static class Delaunay
-{
-
-    public static List<Point> PointList = new List<Point>();
+public static class Delaunay {
     public static List<HalfEdge> Edges = new List<HalfEdge>();
     public static List<Triangle> Triangulation = new List<Triangle>();
 
@@ -15,64 +10,56 @@ public static class Delaunay
     public static void BowyerWatson(List<Point> pointList)
     {
         Triangulation.Clear();
-        Triangle SuperTriangle = new Triangle(new Point(DataManager.Lenght), new Point(DataManager.Base), new Point(DataManager.Height));
+        Triangle SuperTriangle = new Triangle(new Point(DataManager.Lenght), new Point(DataManager.Base),
+            new Point(DataManager.Height));
+        SuperTriangle.SetHalfEdges();
         Triangulation.Add(SuperTriangle);
-        foreach (Point point in PointList)
-        {
+
+        foreach (Point point in pointList) {
             List<Triangle> badTriangles = new List<Triangle>();
-            foreach (Triangle triangles in Triangulation)
-            {
+            foreach (Triangle triangles in Triangulation) {
                 triangles.Circumcenter();
-                if (Vector2Int.Distance(triangles.Center, point.Coordinates) < triangles.Circle.Ray)
-                {
+                if (Vector2Int.Distance(triangles.Center, point.Coordinates) < triangles.Circle.Ray) {
                     badTriangles.Add(triangles);
                 }
             }
 
             List<HalfEdge> polygon = new List<HalfEdge>();
-            foreach (Triangle triangles in badTriangles)
-            {
+            foreach (Triangle triangles in badTriangles) {
                 triangles.SetHalfEdges();
-                foreach (HalfEdge halfEdge in triangles.HalfEdges)
-                {
-                    foreach (var tr in badTriangles)
-                    {
-                        foreach (var he in tr.HalfEdges)
-                        {
-                            if (halfEdge.Edge == he.Edge || halfEdge.OppositeEdge == he.Edge) polygon.Add(halfEdge);
-                        }
+                foreach (var badTriangle in badTriangles) {
+                    if (badTriangle == triangles) continue;
+                    foreach (HalfEdge halfEdge in triangles.CompareHalfEdge(badTriangle)) {
+                        polygon.Add(halfEdge);
                     }
                 }
             }
-
-            foreach (Triangle triangles in badTriangles)
-            {
+            
+            foreach (Triangle triangles in badTriangles) {
                 Triangulation.Remove(triangles);
             }
 
-            foreach (HalfEdge halfEdge in polygon)
-            {
+            foreach (HalfEdge halfEdge in polygon) {
                 Triangle newTri = new Triangle(halfEdge.A, halfEdge.B, point);
                 Triangulation.Add(newTri);
             }
-
-            foreach (Triangle triangles in Triangulation.ToList())
-            {
-                triangles.SetHalfEdges();
-                foreach (Point vertex in triangles.Vertices)
-                {
-                    if (vertex == SuperTriangle.A || vertex == SuperTriangle.B || vertex == SuperTriangle.C)
-                        Triangulation.Remove(triangles);
-                }
-
-                foreach (HalfEdge halfEdge in triangles.HalfEdges) {
-                    if (Edges.Contains(halfEdge))continue;
-                    Edges.Add(halfEdge);
-                }
-            }
         }
 
+        foreach (Triangle triangles in Triangulation.ToList()) {
+            triangles.SetHalfEdges();
+            foreach (Point vertex in triangles.Vertices) {
+                if (vertex == SuperTriangle.A || vertex == SuperTriangle.B || vertex == SuperTriangle.C)
+                    Triangulation.Remove(triangles);
+            }
+
+            foreach (HalfEdge halfEdge in triangles.HalfEdges) {
+                if (Edges.Contains(halfEdge)) continue;
+                Edges.Add(halfEdge);
+            }
+        }
     }
+
+
 
     public static List<HalfEdge> Kruskal(List<Point> G) {
         List<HalfEdge> A = new List<HalfEdge>();
@@ -125,7 +112,6 @@ public static class Delaunay
     }
 
     private static void ClassifyByGrowingOrder(List<HalfEdge> list) {
-        list.OrderByDescending(edge => edge.Weight). ToList();
-        list.Reverse();
+        list.OrderBy(edge => edge.Weight).ToList();
     }
 }

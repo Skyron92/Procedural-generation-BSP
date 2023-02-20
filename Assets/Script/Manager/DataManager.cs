@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class DataManager : MonoBehaviour {
     
@@ -17,15 +19,20 @@ public class DataManager : MonoBehaviour {
     private bool SquareTheMap;
 
     [Header("SPRITE")] [SerializeField] private GameObject _squarePrefab;
+    
+    
+    public static List<Point> PointList = new List<Point>();
 
     public static List<Triangle> Triangles = new List<Triangle>();
+
+    private bool isTriangulated;
 
     //Split and selection
     public void GenerateMap()
     {
-        Lenght = -MapLength;
+        Lenght = MapLength * 2;
         Height = MapHeight * 2;
-        Base = new Vector2Int(MapLength.y, MapHeight.x);
+        Base = new Vector2Int(MapLength.x, MapHeight.x);
         Origin origin = new Origin(MapLength, MapHeight);
         origin.Split();
         foreach (Node leaf in Node.Leafs) {
@@ -36,20 +43,25 @@ public class DataManager : MonoBehaviour {
     }
 
     public void DelaunayTriangulation() {
-        
-        foreach (Triangle triangle in Triangles) {
-            if(!Delaunay.PointList.Contains(triangle.A)) Delaunay.PointList.Add(triangle.A);
-            if(!Delaunay.PointList.Contains(triangle.B)) Delaunay.PointList.Add(triangle.B);
-            if(!Delaunay.PointList.Contains(triangle.C)) Delaunay.PointList.Add(triangle.C);
+        Delaunay.BowyerWatson(PointList);
+        isTriangulated = true;
+        Delaunay.Kruskal(PointList);
+    }
+
+    private void OnDrawGizmos() {
+        if(!isTriangulated) return;
+        Gizmos.color = Color.blue;
+        foreach (var VARIABLE in Delaunay.Triangulation) {
+            foreach (var halfEdge in VARIABLE.HalfEdges) {
+                Gizmos.DrawLine(new Vector3(halfEdge.A.X, halfEdge.A.Y, 0), new Vector3(halfEdge.B.X, halfEdge.B.Y, 0)); 
+            }
         }
-        Delaunay.BowyerWatson(Delaunay.PointList);
-        Delaunay.Kruskal(Delaunay.PointList);
+        isTriangulated = false;
     }
 
     public void DisplayRooms(Node room) {
         GameObject instance = Instantiate(_squarePrefab);
-        if(!SquareTheMap) instance.transform.position = new Vector3((room.abscissa.x + room.abscissa.y) / 2, (room.ordinate.x + room.ordinate.y) / 2, 0);
-        else instance.transform.position = new Vector3((room.abscissa.x + room.abscissa.y) / 2f, (room.ordinate.x + room.ordinate.y) / 2f, 0);
+        instance.transform.position = !SquareTheMap ? new Vector3((room.abscissa.x + room.abscissa.y) / 2, (room.ordinate.x + room.ordinate.y) / 2, 0) : new Vector3((room.abscissa.x + room.abscissa.y) / 2f, (room.ordinate.x + room.ordinate.y) / 2f, 0);
         instance.transform.localScale = new Vector3(room.abscissa.y - room.abscissa.x, room.ordinate.y - room.ordinate.x, 1);
         instance.name = room.abscissa + " " + room.ordinate;
         SpriteRenderer spriteRenderer = instance.GetComponent<SpriteRenderer>();
