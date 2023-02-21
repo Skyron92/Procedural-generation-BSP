@@ -8,7 +8,7 @@ public abstract class Node {
     public Vector2Int abscissa => Square[0];
     public Vector2Int ordinate => Square[1];
     public int SplitValue;
-    protected int MinimumSize = 2;
+    protected int MinimumSize = 1;
     public bool SplitOnAbsissa;
 
     public Node() {

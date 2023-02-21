@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class HalfEdge {
     
-    public Vector2Int Edge => new Vector2Int(B.X - A.X, B.Y - A.Y);
-    public int Weight => Mathf.FloorToInt(Mathf.Sqrt(Triangle.Square(Edge.x) + Triangle.Square(Edge.y)));
+    public int Weight => Mathf.FloorToInt(Mathf.Sqrt(Triangle.Square(B.X - A.X) + Triangle.Square(B.Y - A.Y)));
     public Point A;
     public Point B;
 

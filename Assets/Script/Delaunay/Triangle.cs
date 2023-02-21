@@ -31,11 +31,8 @@ public class Triangle
     }
 
     public void Circumcenter() {
-        // Formula source : https://en.wikipedia.org/wiki/Circumscribed_circle#Circumcenter_coordinates
-        int D = 2 * (A.X * (B.Y - C.Y) + B.X * (C.Y - A.Y) + C.X * (A.Y - B.Y));
-        if (D == 0) D++;
-        Center.x = ((Square(A.X) + Square(A.Y)) * (B.Y - C.Y) + (Square(B.X) + Square(B.Y)) * (C.Y - A.Y) + (Square(C.X) + Square(C.Y)) * (A.Y - B.Y)) / D;
-        Center.y = ((Square(A.X) + Square(A.Y)) * (C.X - B.X) + (Square(B.X) + Square(B.Y)) * (A.X - C.X) + (Square(C.X) + Square(C.Y)) * (B.X - A.X)) / D;
+        Center.x = (A.X + B.X + C.X) / 3;
+        Center.y = (A.Y + B.Y + C.Y) / 3;
 
         Circle = new Circle(Center, Vector2Int.Distance(Center, A.Coordinates));
     }
@@ -44,13 +41,8 @@ public class Triangle
         return x * x;
     }
 
-    public IEnumerable<HalfEdge> CompareHalfEdge(Triangle triangle) {
-        foreach (var halfEdge in triangle.HalfEdges) {
-            foreach (var myHalfEdge in HalfEdges) {
-                if (halfEdge.A != myHalfEdge.A || halfEdge.B != myHalfEdge.A && halfEdge.A != myHalfEdge.B ||
-                    halfEdge.B != myHalfEdge.B) yield return halfEdge;
-            }
-        }
+    public bool IsTheSameTriangle(Triangle triangle) {
+        return (A == triangle.A && (B == triangle.B && C == triangle.C) || (B == triangle.C && C == triangle.B)) || ((A == triangle.B) && (B == triangle.A && C == triangle.C) || (B == triangle.C && C == triangle.A)) || (A == triangle.C&& (B == triangle.A && C == triangle.B) || (B == triangle.B && C == triangle.A));
     }
 
 }

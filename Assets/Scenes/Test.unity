@@ -768,8 +768,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc67db12b41a8f34e8c764d9b30f1e5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapLength: {x: 0, y: 20}
-  MapHeight: {x: 0, y: 20}
+  MapLength: {x: 0, y: 10}
+  MapHeight: {x: 0, y: 10}
   SquareTheMap: 1
   _squarePrefab: {fileID: 2006158449868721317, guid: a02745128559b77429f35380e1323a8a, type: 3}
 --- !u!4 &2093747698

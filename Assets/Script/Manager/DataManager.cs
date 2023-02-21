@@ -23,14 +23,12 @@ public class DataManager : MonoBehaviour {
     
     public static List<Point> PointList = new List<Point>();
 
-    public static List<Triangle> Triangles = new List<Triangle>();
-
     private bool isTriangulated;
 
     //Split and selection
     public void GenerateMap()
     {
-        Lenght = MapLength * 2;
+        Lenght = new Vector2Int(MapLength.y * 2, MapLength.x);
         Height = MapHeight * 2;
         Base = new Vector2Int(MapLength.x, MapHeight.x);
         Origin origin = new Origin(MapLength, MapHeight);
@@ -51,8 +49,8 @@ public class DataManager : MonoBehaviour {
     private void OnDrawGizmos() {
         if(!isTriangulated) return;
         Gizmos.color = Color.blue;
-        foreach (var VARIABLE in Delaunay.Triangulation) {
-            foreach (var halfEdge in VARIABLE.HalfEdges) {
+        foreach (var triangle in Delaunay.Triangulation) {
+            foreach (var halfEdge in triangle.HalfEdges) {
                 Gizmos.DrawLine(new Vector3(halfEdge.A.X, halfEdge.A.Y, 0), new Vector3(halfEdge.B.X, halfEdge.B.Y, 0)); 
             }
         }

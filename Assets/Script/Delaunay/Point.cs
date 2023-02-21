@@ -4,9 +4,6 @@ using UnityEngine;
 public class Point
 {
     public Point parent;
-    public List<Point> childs;
-    public HalfEdge LinkToParent;
-    public List<HalfEdge> LinksToChildren;
     public Vector2Int Coordinates;
     public int Rank;
     public Point Root;

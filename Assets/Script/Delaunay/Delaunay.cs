@@ -28,9 +28,17 @@ public static class Delaunay {
             foreach (Triangle triangles in badTriangles) {
                 triangles.SetHalfEdges();
                 foreach (var badTriangle in badTriangles) {
-                    if (badTriangle == triangles) continue;
-                    foreach (HalfEdge halfEdge in triangles.CompareHalfEdge(badTriangle)) {
-                        polygon.Add(halfEdge);
+                    badTriangle.SetHalfEdges();
+                    if (point == pointList[0]) {
+                        polygon.AddRange(badTriangle.HalfEdges);
+                    }
+                    else {
+                        if (badTriangle == triangles) continue;
+                        foreach (var halfEdge in triangles.HalfEdges) {
+                            if (badTriangle.HalfEdges.Where(myHalfEdge => (halfEdge.A != myHalfEdge.A || halfEdge.B != myHalfEdge.B) && (halfEdge.A != myHalfEdge.B || halfEdge.B != myHalfEdge.A)).Any(myHalfEdge => !polygon.Contains(halfEdge))) {
+                                polygon.Add(halfEdge);
+                            }
+                        }
                     }
                 }
             }
@@ -38,10 +46,14 @@ public static class Delaunay {
             foreach (Triangle triangles in badTriangles) {
                 Triangulation.Remove(triangles);
             }
-
-            foreach (HalfEdge halfEdge in polygon) {
-                Triangle newTri = new Triangle(halfEdge.A, halfEdge.B, point);
-                Triangulation.Add(newTri);
+            
+            foreach (var newTri in polygon.Select(halfEdge => new Triangle(halfEdge.A, halfEdge.B, point)))
+            {
+                bool isOkay = false;
+                foreach (Triangle triangle in Triangulation) {
+                    isOkay = newTri.IsTheSameTriangle(triangle);
+                }
+                if(!isOkay) Triangulation.Add(newTri);  
             }
         }
 
@@ -59,19 +71,15 @@ public static class Delaunay {
         }
     }
 
-
-
     public static List<HalfEdge> Kruskal(List<Point> G) {
         List<HalfEdge> A = new List<HalfEdge>();
         foreach (Point V in G) {
             MakeSet(V);
             ClassifyByGrowingOrder(Edges);
-            foreach (HalfEdge halfEdge in Edges) {
-                if(halfEdge.A == V || halfEdge.B != V) continue;
-                if (Find(halfEdge.A) != Find(V)) {
-                    A.Add(halfEdge);
-                    Union(halfEdge.A, V);
-                }
+            foreach (var halfEdge in Edges.Where(halfEdge => halfEdge.A != V && halfEdge.B == V).Where(halfEdge => Find(halfEdge.A) != Find(V)))
+            {
+                A.Add(halfEdge);
+                Union(halfEdge.A, V);
             }
         }
 
@@ -84,21 +92,20 @@ public static class Delaunay {
     private static void Union(Point u, Point v) {
         u.Root = Find(u);
         v.Root = Find(v);
-        if (u.Root != v.Root) {
-            if (u.Root.Rank < v.Root.Rank) {
-                u.Root.parent = v.Root;
-            }
-            else {
-                v.Root.parent = u.Root;
-                if (u.Root.Rank == v.Root.Rank) {
-                    u.Root.Rank++;
-                }
+        if (u.Root == v.Root) return;
+        if (u.Root.Rank < v.Root.Rank) {
+            u.Root.parent = v.Root;
+        }
+        else {
+            v.Root.parent = u.Root;
+            if (u.Root.Rank == v.Root.Rank) {
+                u.Root.Rank++;
             }
         }
     }
 
     private static Point Find(Point v) {
-        if (v.parent == null) v.parent = v;
+        v.parent ??= v;
         if (v.parent != v) {
             v.parent = Find(v.parent);
         }
